@@ -1,6 +1,7 @@
 import { InMemoryUsersRepository } from "../../repositories/in-memory/InMemoryUsersRepository";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 import { CreateUserUseCase } from "../createUser/CreateUserUseCase";
+import { ShowUserProfileError } from "./ShowUserProfileError";
 import { ShowUserProfileUseCase } from "./ShowUserProfileUseCase";
 
 let usersRepository: IUsersRepository;
@@ -27,5 +28,11 @@ describe("ShowUserProfileUseCase", () => {
     expect(profile).toHaveProperty("password");
     expect(profile.email).toEqual("teste@email.com");
     expect(profile.name).toEqual("Henrique");
+  });
+
+  it("Should be not able to read profile by user_id with user donsn't exists", async () => {
+    expect(async () => {
+      await showUserProfileUseCase.execute("Id inexistente");
+    }).rejects.toBeInstanceOf(ShowUserProfileError);
   });
 });
